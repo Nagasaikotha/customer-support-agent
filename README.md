@@ -4,6 +4,25 @@ An AI-powered customer support system with a **router agent** that classifies in
 customer messages and delegates to one of three specialized sub-agents (Support, Order,
 Billing), each backed by tools that query real data from a seeded Postgres database.
 
+## Screenshots
+
+Real captures from a running session (`MOCK_LLM=false`, live Groq/Llama calls) - not mocked
+UI states.
+
+**Fallback → Support handoff, multi-turn context**: an off-topic question (booking IPL
+tickets) correctly lands on the Fallback Agent, which asks a clarifying question instead of
+guessing. Once clarified, it's handled by the Support Agent - and the *next* message
+("where can I find the official website?") is answered correctly with no order/billing
+context at all, purely from the conversation history carried across turns.
+
+![Fallback agent asks a clarifying question, then the Support Agent picks up the clarified conversation across three turns](docs/screenshots/fallback-to-support-handoff.png)
+
+**Real-time typing indicator**: fires immediately after the user sends a message, cycling
+reasoning words ("Thinking...") while the Router Agent classifies, before any answer text
+exists.
+
+![Thinking... typing indicator shown immediately after sending a message, before the agent's reply streams in](docs/screenshots/typing-indicator.png)
+
 ## Architecture
 
 ```
@@ -175,22 +194,3 @@ gold-plated - happy to discuss trade-offs for any of these:
   to work across multiple server instances.
 - **Deployed live demo**: not attempted. The app runs fully locally (Docker Compose Postgres
   + `npm run dev` on both sides) - see Setup above.
-
-## Screenshots
-
-Real captures from a running session (`MOCK_LLM=false`, live Groq/Llama calls) - not mocked
-UI states.
-
-**Fallback → Support handoff, multi-turn context**: an off-topic question (booking IPL
-tickets) correctly lands on the Fallback Agent, which asks a clarifying question instead of
-guessing. Once clarified, it's handled by the Support Agent - and the *next* message
-("where can I find the official website?") is answered correctly with no order/billing
-context at all, purely from the conversation history carried across turns.
-
-![Fallback agent asks a clarifying question, then the Support Agent picks up the clarified conversation across three turns](docs/screenshots/fallback-to-support-handoff.png)
-
-**Real-time typing indicator**: fires immediately after the user sends a message, cycling
-reasoning words ("Thinking...") while the Router Agent classifies, before any answer text
-exists.
-
-![Thinking... typing indicator shown immediately after sending a message, before the agent's reply streams in](docs/screenshots/typing-indicator.png)
